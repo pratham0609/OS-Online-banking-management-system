@@ -1,28 +1,25 @@
-Banking Management System
 Overview
-This project is a server-side implementation of a banking management system designed to handle operations such as user authentication, account management, and financial transactions. The system supports three types of users: normal users, joint users, and administrators. The server manages concurrent client connections and ensures data consistency through file-based storage and file locking mechanisms.
-
+The Banking Management System is a robust server-side application designed to manage user authentication, account management, and financial transactions. It supports three user types: normal users, joint users, and administrators. The system effectively handles concurrent client connections, ensuring data consistency through file-based storage and sophisticated file locking mechanisms.
 
 Features
-User Authentication: Verify credentials for normal users, joint users, and admins.
-Account Management: Create, modify, and delete user accounts.
-Transaction Processing: Handle deposits, withdrawals, and balance inquiries.
-Concurrency Control: Use file locks to manage simultaneous access to user data.
-Multi-User Support: Separate handling of normal users, joint users, and admins.
-
-
-
+User Authentication: Validates credentials for normal users, joint users, and administrators.
+Account Management: Enables creation, modification, and deletion of user accounts.
+Transaction Processing: Manages deposits, withdrawals, and balance inquiries.
+Concurrency Control: Utilizes file locks to manage simultaneous access to user data.
+Multi-User Support: Distinct handling for normal users, joint users, and administrators.
 File Structure
-server.c: Contains the server logic, including handling client connections and invoking functions for various operations.
-data.c: Implements the core functions for data retrieval, authentication, transaction processing, and account management.
+server.c: Contains the server logic for client connections and operation functions.
+data.c: Implements core functions for data retrieval, authentication, transaction processing, and account management.
 normalUser.dat: Stores records for normal user accounts.
 jointUser.dat: Stores records for joint user accounts.
-admin.dat: Stores records for admin accounts.
+admin.dat: Stores records for administrator accounts.
 
 
 
 Data Structures
-Normal User
+Normal User:
+
+```
 typedef struct {
     int userID;
     char name[30];
@@ -31,10 +28,10 @@ typedef struct {
     float balance;
     int status; // ACTIVE or CLOSED
 } normalUser;
+```
 
-
-
-Joint User
+Joint User:
+```
 typedef struct {
     int userID;
     char name1[30];
@@ -44,92 +41,74 @@ typedef struct {
     float balance;
     int status; // ACTIVE or CLOSED
 } jointUser;
+```
 
+Admin:
 
-
-Admin
+```
 typedef struct {
     int userID;
     char username[30];
     char password[10];
 } admin;
-
+```
 
 
 Functionality
-Authentication
-checkNormalUser(normalUser currUser): Verifies if the provided normalUser credentials match an active account.
-checkJointUser(jointUser currUser): Verifies if the provided jointUser credentials match an active account.
-checkAdmin(admin currUser): Verifies admin credentials.
 
+Authentication:
+checkNormalUser(normalUser currUser): Verifies credentials for normal users.
+checkJointUser(jointUser currUser): Verifies credentials for joint users.
+checkAdmin(admin currUser): Verifies credentials for administrators.
 
+Transactions:
+depositMoney(int accType, int ID, float amt): Deposits a specified amount into a user account.
+withdrawMoney(int accType, int ID, float amt): Withdraws a specified amount from a user account, ensuring sufficient balance.
+getBalance(int accType, int ID): Retrieves the current balance of a user account.
 
-Transactions
-depositMoney(int accType, int ID, float amt): Deposits a specified amount into a normal or joint user account.
-withdrawMoney(int accType, int ID, float amt): Withdraws a specified amount from a normal or joint user account, ensuring sufficient balance.
-getBalance(int accType, int ID): Retrieves the current balance of a normal or joint user account.
-
-
-
-Account Management
+Account Management:
 addNormalUser(normalUser record): Adds a new normal user account.
 addJointUser(jointUser record): Adds a new joint user account.
 deleteNormalUser(int ID): Marks a normal user account as CLOSED and resets the balance.
 deleteJointUser(int ID): Marks a joint user account as CLOSED and resets the balance.
 modifyNormalUser(normalUser modUser): Modifies an existing normal user account.
 modifyJointUser(jointUser modUser): Modifies an existing joint user account.
-alterPassword(int accType, int ID, char newPwd[10]): Updates the password for a normal or joint user account.
-
-
+alterPassword(int accType, int ID, char newPwd[10]): Updates the password for a user account.
 
 Concurrency Handling
 File Locking:
-The system uses file locks (flock) to prevent concurrent access issues.
-Read Lock (F_RDLCK): Used during read operations to prevent data from being written simultaneously.
-Write Lock (F_WRLCK): Used during write operations to prevent both reading and writing simultaneously.
-Unlock (F_UNLCK): Releases the lock after the operation is complete.
-
-
+Read Lock (F_RDLCK): Prevents data from being written during read operations.
+Write Lock (F_WRLCK): Prevents both reading and writing during write operations.
+Unlock (F_UNLCK): Releases the lock after completion.
 
 Security Considerations
-Password Storage: Passwords are stored as plain text, which is not secure for production use. Implementing password hashing (e.g., using bcrypt) is recommended.
-File Security: Access to data files should be restricted using appropriate file permissions to prevent unauthorized access.
-
-
-
+Password Storage: Currently stored as plain text. Implement password hashing (e.g., using bcrypt) for better security.
+File Security: Ensure access to data files is restricted with appropriate permissions.
 Error Handling
-File Operations: The current implementation assumes success for file operations like open, read, and write. It’s important to add error handling for cases where files are missing, corrupted, or inaccessible.
-Data Integrity: Additional checks should be implemented to ensure data consistency, especially during concurrent access.
-
-
-
+File Operations: Add error handling for file operations like opening, reading, and writing.
+Data Integrity: Implement additional checks to ensure data consistency, especially during concurrent access.
 Setup and Usage
-Prerequisites
-A Unix-like operating system (e.g., Linux)
-GCC compiler
-Compilation
-bash
-Copy code
+Prerequisites: A Unix-like operating system (e.g., Linux) and GCC compiler.
+
+Compilation:
+
+```
 gcc server.c data.c -o banking_system -lpthread
-Running the Server
-bash
-Copy code
+```
+
+Running the Server:
+```
 ./banking_system
-
-
-
-Client Interaction
-Clients will interact with the server through a user interface (not provided in the code) that connects to the server via sockets. The server handles requests to authenticate users, perform transactions, and manage accounts.
-
-
+```
+Client Interaction: Clients interact with the server via a user interface (not included in this code) that connects through sockets. The server manages user authentication, transactions, and account management.
 
 Future Enhancements
 Security Improvements: Implement password hashing and secure file access.
-Database Integration: Replace flat files with a robust relational database system (e.g., MySQL, PostgreSQL) for better data management.
-Enhanced Error Handling: Add comprehensive error handling and logging mechanisms.
-User Interface: Develop a client-side application (e.g., web or desktop) for user interaction.
-Multi-Threading Improvements: Optimize thread management to avoid potential deadlocks or resource contention issues.
+Database Integration: Transition from flat files to a relational database system (e.g., MySQL, PostgreSQL).
+Enhanced Error Handling: Introduce comprehensive error handling and logging mechanisms.
+User Interface: Develop a client-side application (e.g., web or desktop) for enhanced user interaction.
+Multi-Threading Improvements: Optimize thread management to avoid deadlocks or resource contention.
 
 
 Conclusion
-The Banking Management System is a functional server-side application that provides essential banking operations. While the current implementation effectively handles user data and transactions, enhancements in security, error handling, and database integration are necessary for production-level deployment.
+The Banking Management System is a functional server-side application that handles essential banking operations. While effective in its current form, future enhancements in security, error handling, and database integration are recommended for production-level deployment.
