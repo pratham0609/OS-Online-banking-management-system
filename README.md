@@ -1,7 +1,10 @@
 Overview
+
 The Banking Management System is a robust server-side application designed to manage user authentication, account management, and financial transactions. It supports three user types: normal users, joint users, and administrators. The system effectively handles concurrent client connections, ensuring data consistency through file-based storage and sophisticated file locking mechanisms.
 
 Features
+
+
 User Authentication: Validates credentials for normal users, joint users, and administrators.
 Account Management: Enables creation, modification, and deletion of user accounts.
 Transaction Processing: Manages deposits, withdrawals, and balance inquiries.
@@ -82,6 +85,8 @@ Write Lock (F_WRLCK): Prevents both reading and writing during write operations.
 Unlock (F_UNLCK): Releases the lock after completion.
 
 Security Considerations
+
+
 Password Storage: Currently stored as plain text. Implement password hashing (e.g., using bcrypt) for better security.
 File Security: Ensure access to data files is restricted with appropriate permissions.
 Error Handling
@@ -100,9 +105,11 @@ Running the Server:
 ```
 ./banking_system
 ```
-Client Interaction: Clients interact with the server via a user interface (not included in this code) that connects through sockets. The server manages user authentication, transactions, and account management.
+Client Interaction: 
 
-Future Enhancements
+Clients interact with the server via a user interface (not included in this code) that connects through sockets. The server manages user authentication, transactions, and account management.
+
+Future Enhancements:
 Security Improvements: Implement password hashing and secure file access.
 Database Integration: Transition from flat files to a relational database system (e.g., MySQL, PostgreSQL).
 Enhanced Error Handling: Introduce comprehensive error handling and logging mechanisms.
@@ -110,5 +117,5 @@ User Interface: Develop a client-side application (e.g., web or desktop) for enh
 Multi-Threading Improvements: Optimize thread management to avoid deadlocks or resource contention.
 
 
-Conclusion
+Conclusion:
 The Banking Management System is a functional server-side application that handles essential banking operations. While effective in its current form, future enhancements in security, error handling, and database integration are recommended for production-level deployment.
